@@ -97,14 +97,10 @@ dependencies {
     // ESC/POS Thermal Printer
     implementation("com.github.DantSu:ESCPOS-ThermalPrinter-Android:3.3.0")
 
-    // Google Sheets API (backup only)
-    implementation("com.google.api-client:google-api-client-android:2.2.0") {
-        exclude(group = "org.apache.httpcomponents")
-    }
-    implementation("com.google.apis:google-api-services-sheets:v4-rev20240123-2.0.0") {
-        exclude(group = "org.apache.httpcomponents")
-    }
-    implementation("com.google.android.gms:play-services-auth:21.0.0")
+    // Google Sheets API (اخياري - إضافة لاحقاً)
+    // implementation("com.google.api-client:google-api-client-android:2.2.0")
+    // implementation("com.google.apis:google-api-services-sheets:v4-rev20230816-2.0.0")
+    // implementation("com.google.android.gms:play-services-auth:21.0.0")
 
     // Coroutines
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.3")
