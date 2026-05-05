@@ -8,12 +8,13 @@ import androidx.fragment.app.Fragment
 import com.google.android.material.appbar.MaterialToolbar
 import com.google.android.material.navigation.NavigationView
 import com.pos.clothingstore.R
-import com.pos.clothingstore.ui.backup.BackupFragment
 import com.pos.clothingstore.ui.pos.POSFragment
 import com.pos.clothingstore.ui.products.ProductsFragment
+import com.pos.clothingstore.ui.reports.SalesReportFragment
 
 /**
  * النشاط الرئيسي - يضم DrawerLayout مع التنقل بين الشاشات الثلاث
+ * شاشة البيع | إدارة المنتجات | تقرير المبيعات
  */
 class MainActivity : AppCompatActivity() {
 
@@ -41,7 +42,7 @@ class MainActivity : AppCompatActivity() {
             when (menuItem.itemId) {
                 R.id.nav_pos -> loadFragment(POSFragment())
                 R.id.nav_products -> loadFragment(ProductsFragment())
-                R.id.nav_backup -> loadFragment(BackupFragment())
+                R.id.nav_sales_report -> loadFragment(SalesReportFragment())
             }
             drawerLayout.closeDrawer(GravityCompat.START)
             true
