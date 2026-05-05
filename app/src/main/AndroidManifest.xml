@@ -19,9 +19,9 @@
     <application
         android:name=".POSApplication"
         android:allowBackup="true"
-        android:icon="@android:drawable/ic_menu_shop"
+        android:icon="@android:drawable/ic_menu_info_details"
         android:label="@string/app_name"
-        android:roundIcon="@android:drawable/ic_menu_shop"
+        android:roundIcon="@android:drawable/ic_menu_info_details"
         android:supportsRtl="true"
         android:theme="@style/Theme.POSClothingStore"
         android:hardwareAccelerated="true"
