@@ -2,14 +2,11 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
         android:id="@+id/nav_pos"
-        android:icon="@android:ic_menu_today"
         android:title="@string/nav_pos" />
     <item
         android:id="@+id/nav_products"
-        android:icon="@android:ic_menu_manage"
         android:title="@string/nav_products" />
     <item
         android:id="@+id/nav_sales_report"
-        android:icon="@android:ic_menu_agenda"
         android:title="@string/today_sales" />
 </menu>
