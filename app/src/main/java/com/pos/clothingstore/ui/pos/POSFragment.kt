@@ -114,7 +114,7 @@ class POSFragment : Fragment() {
                 val query = s?.toString() ?: ""
                 if (query.length >= 2) {
                     searchProducts(query)
-                } else if (query.isEmpty) {
+                } else if (query.isEmpty()) {
                     observeProducts()
                 }
             }

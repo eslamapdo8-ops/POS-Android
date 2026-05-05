@@ -92,73 +92,71 @@ class ProductsFragment : Fragment() {
             dialogBinding.etBarcode.isEnabled = false // لا يمكن تغيير الباركود
         }
 
-        MaterialAlertDialogBuilder(requireContext())
+        val dialog = MaterialAlertDialogBuilder(requireContext())
             .setView(dialogView)
             .setCancelable(false)
             .show()
-            .let { dialog ->
-                dialogBinding.btnCancel.setOnClickListener { dialog.dismiss() }
-                dialogBinding.btnSave.setOnClickListener {
-                    val barcode = dialogBinding.etBarcode.text.toString().trim()
-                    val name = dialogBinding.etName.text.toString().trim()
-                    val priceStr = dialogBinding.etPrice.text.toString().trim()
-                    val qtyStr = dialogBinding.etQuantity.text.toString().trim()
-                    val supplier = dialogBinding.etSupplier.text.toString().trim()
 
-                    // التحقق من المدخلات
-                    if (barcode.isEmpty() || name.isEmpty() || priceStr.isEmpty() || qtyStr.isEmpty()) {
-                        Toast.makeText(requireContext(), getString(R.string.required_field), Toast.LENGTH_SHORT).show()
-                        return@let
-                    }
+        dialogBinding.btnCancel.setOnClickListener { dialog.dismiss() }
+        dialogBinding.btnSave.setOnClickListener {
+            val barcode = dialogBinding.etBarcode.text.toString().trim()
+            val name = dialogBinding.etName.text.toString().trim()
+            val priceStr = dialogBinding.etPrice.text.toString().trim()
+            val qtyStr = dialogBinding.etQuantity.text.toString().trim()
+            val supplier = dialogBinding.etSupplier.text.toString().trim()
 
-                    val price = priceStr.toDoubleOrNull()
-                    val qty = qtyStr.toIntOrNull()
+            // التحقق من المدخلات
+            if (barcode.isEmpty() || name.isEmpty() || priceStr.isEmpty() || qtyStr.isEmpty()) {
+                Toast.makeText(requireContext(), getString(R.string.required_field), Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
 
-                    if (price == null || price <= 0) {
-                        Toast.makeText(requireContext(), getString(R.string.invalid_price), Toast.LENGTH_SHORT).show()
-                        return@let
-                    }
+            val price = priceStr.toDoubleOrNull()
+            val qty = qtyStr.toIntOrNull()
 
-                    if (qty == null || qty < 0) {
-                        Toast.makeText(requireContext(), getString(R.string.invalid_quantity), Toast.LENGTH_SHORT).show()
-                        return@let
-                    }
+            if (price == null || price <= 0) {
+                Toast.makeText(requireContext(), getString(R.string.invalid_price), Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
 
-                    lifecycleScope.launch(Dispatchers.IO) {
-                        try {
-                            if (isEdit) {
-                                val updated = existing!!.copy(
-                                    name = name, price = price, quantity = qty, supplier = supplier.ifBlank { null }
-                                )
-                                db.productDao().update(updated)
-                            } else {
-                                // التحقق من تكرار الباركود
-                                val existingProduct = db.productDao().getByBarcode(barcode)
-                                if (existingProduct != null) {
-                                    launch(Dispatchers.Main) {
-                                        Toast.makeText(requireContext(), getString(R.string.barcode_exists), Toast.LENGTH_SHORT).show()
-                                    }
-                                    return@launch
-                                }
-                                db.productDao().insert(Product(
-                                    barcode = barcode, name = name, price = price,
-                                    quantity = qty, supplier = supplier.ifBlank { null }
-                                ))
-                            }
+            if (qty == null || qty < 0) {
+                Toast.makeText(requireContext(), getString(R.string.invalid_quantity), Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
+
+            lifecycleScope.launch(Dispatchers.IO) {
+                try {
+                    if (isEdit) {
+                        val updated = existing!!.copy(
+                            name = name, price = price, quantity = qty, supplier = supplier.ifBlank { null }
+                        )
+                        db.productDao().update(updated)
+                    } else {
+                        val existingProduct = db.productDao().getByBarcode(barcode)
+                        if (existingProduct != null) {
                             launch(Dispatchers.Main) {
-                                Toast.makeText(requireContext(),
-                                    if (isEdit) getString(R.string.product_updated) else getString(R.string.product_added),
-                                    Toast.LENGTH_SHORT).show()
-                                dialog.dismiss()
+                                Toast.makeText(requireContext(), getString(R.string.barcode_exists), Toast.LENGTH_SHORT).show()
                             }
-                        } catch (e: Exception) {
-                            launch(Dispatchers.Main) {
-                                Toast.makeText(requireContext(), "خطأ: ${e.message}", Toast.LENGTH_SHORT).show()
-                            }
+                            return@launch
                         }
+                        db.productDao().insert(Product(
+                            barcode = barcode, name = name, price = price,
+                            quantity = qty, supplier = supplier.ifBlank { null }
+                        ))
+                    }
+                    launch(Dispatchers.Main) {
+                        Toast.makeText(requireContext(),
+                            if (isEdit) getString(R.string.product_updated) else getString(R.string.product_added),
+                            Toast.LENGTH_SHORT).show()
+                        dialog.dismiss()
+                    }
+                } catch (e: Exception) {
+                    launch(Dispatchers.Main) {
+                        Toast.makeText(requireContext(), "خطأ: ${e.message}", Toast.LENGTH_SHORT).show()
                     }
                 }
             }
+        }
     }
 
     /**
