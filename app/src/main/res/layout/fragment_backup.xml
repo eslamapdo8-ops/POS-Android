@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="@dimen/spacing_lg"
+    android:layoutDirection="rtl">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:gravity="center_horizontal">
+
+        <ImageView
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:src="@android:drawable/ic_menu_upload"
+            android:contentDescription="نسخ احتياطي"
+            android:layout_marginTop="@dimen/spacing_xl"
+            android:layout_marginBottom="@dimen/spacing_md" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="النسخ الاحتياطي"
+            android:textSize="@dimen/text_xl"
+            android:textStyle="bold"
+            android:textColor="@color/text_primary"
+            android:gravity="center"
+            android:layout_marginBottom="@dimen/spacing_sm" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="تصدير جميع البيانات إلى Google Sheets كنسخة احتياطية. يجب تسجيل الدخول بحساب Google أولاً."
+            android:textSize="@dimen/text_md"
+            android:textColor="@color/text_secondary"
+            android:gravity="center"
+            android:layout_marginBottom="@dimen/spacing_xl" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btn_google_signin"
+            style="@style/PrimaryButton"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/button_height"
+            android:text="تسجيل الدخول بحساب Google"
+            android:layout_marginBottom="@dimen/spacing_md" />
+
+        <TextView
+            android:id="@+id/tv_signed_in_as"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="غير مسجل الدخول"
+            android:textSize="@dimen/text_sm"
+            android:textColor="@color/text_secondary"
+            android:gravity="center"
+            android:layout_marginBottom="@dimen/spacing_xl"
+            android:visibility="gone" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btn_backup"
+            style="@style/PrimaryButton"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/button_height"
+            android:text="@string/btn_backup"
+            android:enabled="false" />
+
+        <TextView
+            android:id="@+id/tv_backup_status"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text=""
+            android:textSize="@dimen/text_sm"
+            android:textColor="@color/text_secondary"
+            android:gravity="center"
+            android:layout_marginTop="@dimen/spacing_md" />
+
+    </LinearLayout>
+
+</ScrollView>
