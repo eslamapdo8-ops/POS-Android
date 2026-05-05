@@ -32,19 +32,6 @@ jobs:
           key: gradle-${{ runner.os }}-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
           restore-keys: gradle-${{ runner.os }}-
 
-      - name: Create gradle wrapper
-        run: |
-          mkdir -p gradle/wrapper
-          cat > gradle/wrapper/gradle-wrapper.properties << 'EOF'
-          distributionBase=GRADLE_USER_HOME
-          distributionPath=wrapper/dists
-          distributionUrl=https\://services.gradle.org/distributions/gradle-8.2-bin.zip
-          networkTimeout=10000
-          validateDistributionUrl=true
-          zipStoreBase=GRADLE_USER_HOME
-          zipStorePath=wrapper/dists
-          EOF
-
       - name: Setup Gradle wrapper
         uses: gradle/actions/setup-gradle@v3
 
@@ -88,20 +75,42 @@ jobs:
             adb shell input keyevent 82
             adb shell 'while [[ "$(getprop sys.boot_completed)" != "1" ]]; do sleep 1; done'
             sleep 5
+
             echo "=== Device info ==="
             adb shell getprop ro.product.cpu.abi
             adb shell getprop ro.build.version.sdk
             adb shell wm size
+
             echo "=== Installing APK ==="
             APK_PATH=$(find app/build/outputs/apk/release/*.apk | head -1)
+            echo "Installing: $APK_PATH"
             adb install -t -r "$APK_PATH"
+            INSTALL_EXIT=$?
+
+            if [ $INSTALL_EXIT -ne 0 ]; then
+              echo "::error::INSTALLATION FAILED with exit code: $INSTALL_EXIT"
+              adb logcat -d | grep -iE "(INSTALL|PackageManager)" | tail -30
+              exit 1
+            fi
+
+            echo "::notice::Installation succeeded"
+
             echo "=== Launching app ==="
             adb shell am start -n com.pos.clothingstore/.ui.MainActivity
             sleep 5
+
             echo "=== Taking screenshot ==="
             adb exec-out screencap -p > /tmp/emulator_screen.png
+
             echo "=== Checking for crashes ==="
-            adb logcat -d | grep -E "FATAL EXCEPTION|AndroidRuntime" | tail -20 || echo "No crashes"
+            CRASH=$(adb logcat -d | grep -E "FATAL EXCEPTION|AndroidRuntime" | tail -20)
+            if [ -n "$CRASH" ]; then
+              echo "::warning::App crashed after launch"
+              echo "$CRASH"
+            else
+              echo "::notice::App running without crashes"
+            fi
+
             echo "=== DONE ==="
 
       - name: Upload APK
